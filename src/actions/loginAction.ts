@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { findUserEmailRepo } from "../repositories/findUserEmailRepo";
 import { findUsernameRepo } from "../repositories/findUsernameReo";
+import { comparePasswords } from "../bcrypt/bcrypt";
+import { excludeFields } from "../bcrypt/excludeFields";
 // LOGIC
 // Pertama cek dulu apakah variabel usernameOrEmail itu adalah email atau bukan
 //Kalau email cari data email di dbs begitu sebaliknay di username
@@ -35,18 +37,19 @@ export const loginAction = async (
         message: "Account deleted",
       };
     }
+    const isPasswordValid = await comparePasswords(password, user.password);
 
-    if (user.password !== password) {
+    if (!isPasswordValid) {
       return {
         status: 400,
         message: "Invalid credentials",
       };
     }
-
+    const dataWithoutPassword = excludeFields(user, ["password"]);
     return {
       status: 200,
       message: "Login success",
-      data: user,
+      data: dataWithoutPassword,
     };
   } catch (error) {
     console.log(error);
