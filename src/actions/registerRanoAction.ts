@@ -3,9 +3,10 @@ import { registerRanoRepo } from "../repositories/registerRanoRepo";
 import { IUser } from "../type/type";
 import { Response } from "express";
 import { getExpenseRepo } from "../repositories/userGetRepo";
+import { hashPassword } from "../bcrypt/bcrypt";
 const prisma = new PrismaClient();
 export const registerRanoAction = async (body: IUser) => {
-  const { username, email } = body;
+  const { username, email, password } = body;
   try {
     const user = await getExpenseRepo(username, email);
     if (user?.length) {
@@ -14,7 +15,8 @@ export const registerRanoAction = async (body: IUser) => {
         message: "Email atau username yang di masukkan sudah terdaftar!",
       };
     }
-
+    const hashedPassword = await hashPassword(password);
+    body.password = hashedPassword;
     const register = await registerRanoRepo(body);
     return {
       status: 200,
