@@ -9,8 +9,9 @@ export const loginRanoController = async (
   next: NextFunction
 ) => {
   try {
-    const result = await loginAction(req.body.username, req.body.password);
-    res.send(result);
+    const { usernameOrEmail, password } = req.body;
+    const result = await loginAction(usernameOrEmail, password);
+    res.status(result.status).send(result);
   } catch (error) {
     console.log(error);
   }

@@ -4,9 +4,23 @@ export const getExpenseRepo = async (username: string, email: string) => {
   try {
     const datauser = await prisma.users.findMany({
       where: {
-        OR: [{ username }, { email }],
+        OR: [
+          {
+            username: {
+              equals: username,
+            },
+          },
+          {
+            email: {
+              equals: email,
+            },
+          },
+        ],
       },
     });
     return datauser;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
