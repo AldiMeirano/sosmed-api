@@ -1,11 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
-export const getDataEmailRepo = async (email: string) => {
+export const findUserEmailRepo = async (email: string) => {
   try {
-    const datauser = await prisma.users.findMany({
-      where: {
-        email,
-      },
+    const datauser = await prisma.users.findUnique({
+      where: { email },
     });
     return datauser;
   } catch (error) {

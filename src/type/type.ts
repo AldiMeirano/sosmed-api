@@ -3,5 +3,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
-  createdAt: string;
+  createdAt: Date;
+  isDeleted: boolean;
+  updateAt: Date;
 }

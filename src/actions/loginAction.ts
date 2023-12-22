@@ -1,29 +1,53 @@
 import { PrismaClient } from "@prisma/client";
-import { registerRanoRepo } from "../repositories/registerRanoRepo";
-import { IUser } from "../type/type";
-import { getDataUsernameRepo } from "../repositories/getDataByUsernameRepo";
-import { getDataEmailRepo } from "../repositories/getDataByEmail";
+import { findUserEmailRepo } from "../repositories/findUserEmailRepo";
+import { findUsernameRepo } from "../repositories/findUsernameReo";
+// LOGIC
+// Pertama cek dulu apakah variabel usernameOrEmail itu adalah email atau bukan
+//Kalau email cari data email di dbs begitu sebaliknay di username
+//kalau mislanya datanya gak ada ? langsung return account not found
+// kalau datanya ada baru kita cek password yang ada di dbs
+// dengan password yg di masukkan oleh user(req.body)
+// Kalau misalnya passwordnya gak sama return false
+// Kalau pwnya sama return  success
 
-const prisma = new PrismaClient();
 export const loginAction = async (
-  userNameOrEmail: string,
+  usernameOrEmail: string,
   password: string
 ) => {
   try {
-    const dataUsername = await getDataUsernameRepo(userNameOrEmail);
-    const dataEmail = await getDataEmailRepo(userNameOrEmail);
-   
-const userEmai = dataEmail.includes("@")
-    // if(dataUsername)
+    let user;
+    if (usernameOrEmail.includes("@")) {
+      user = await findUserEmailRepo(usernameOrEmail);
+    } else {
+      user = await findUsernameRepo(usernameOrEmail);
+    }
 
-    // if (dataUsername?.length) {
-    //
-    // } else {
-    //   return {
-    //     status: 400,
-    //     message: "Data tidak ketemu",
-    //   };
-    // }
+    if (!user) {
+      return {
+        status: 404,
+        message: "Account not found",
+      };
+    }
+
+    if (user.isDeleted) {
+      return {
+        status: 404,
+        message: "Account deleted",
+      };
+    }
+
+    if (user.password !== password) {
+      return {
+        status: 400,
+        message: "Invalid credentials",
+      };
+    }
+
+    return {
+      status: 200,
+      message: "Login success",
+      data: user,
+    };
   } catch (error) {
     console.log(error);
     throw error;
