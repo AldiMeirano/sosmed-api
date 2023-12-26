@@ -3,6 +3,7 @@ import { findUserEmailRepo } from "../repositories/findUserEmailRepo";
 import { findUsernameRepo } from "../repositories/findUsernameReo";
 import { comparePasswords } from "../bcrypt/bcrypt";
 import { excludeFields } from "../bcrypt/excludeFields";
+import { createToken } from "../bcrypt/jwt";
 // LOGIC
 // Pertama cek dulu apakah variabel usernameOrEmail itu adalah email atau bukan
 //Kalau email cari data email di dbs begitu sebaliknay di username
@@ -45,11 +46,14 @@ export const loginAction = async (
         message: "Invalid credentials",
       };
     }
+
     const dataWithoutPassword = excludeFields(user, ["password"]);
+    const token = createToken({ id: user.id });
     return {
       status: 200,
       message: "Login success",
       data: dataWithoutPassword,
+      token: token,
     };
   } catch (error) {
     console.log(error);
