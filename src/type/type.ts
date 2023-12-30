@@ -7,3 +7,10 @@ export interface IUser {
   isDeleted: boolean;
   updateAt: Date;
 }
+
+export interface ITweet {
+  id: number;
+  tweet: string;
+  userId: number;
+  CreatedAt: Date;
+}

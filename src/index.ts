@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import registerRano from "./routers/ranoRouter";
-
+import tweetUser from "./routers/tweetRouter";
 import cors from "cors";
 
 const PORT = process.env.PORT || 3000;
@@ -13,7 +13,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 app.use(cors());
 app.use("/users", registerRano);
-
+app.use("/tweet", tweetUser);
 app.post("/", (req, res) => {
   res.send("Api");
 });
