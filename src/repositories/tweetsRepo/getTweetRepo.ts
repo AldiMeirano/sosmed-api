@@ -8,6 +8,7 @@ export const getTweetRepo = async () => {
       include: {
         users: {
           select: {
+            id: true,
             email: true,
             username: true,
           },
