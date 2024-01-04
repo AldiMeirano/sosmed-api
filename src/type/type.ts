@@ -12,5 +12,5 @@ export interface ITweet {
   id: number;
   tweet: string;
   userId: number;
-  CreatedAt: Date;
+  createdAt: Date;
 }

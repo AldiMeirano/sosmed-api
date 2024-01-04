@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export const getTweetByIdRepo = async (id: number) => {
+export const getTweetByIdRepo = async (userId: number) => {
   try {
-    const result = await prisma.tweets.findUnique({
-      where: { id },
+    const result = await prisma.tweets.findMany({
+      where: {
+        userId,
+      },
       include: {
         users: {
           select: {
@@ -13,6 +15,9 @@ export const getTweetByIdRepo = async (id: number) => {
             username: true,
           },
         },
+      },
+      orderBy: {
+        createdAt: "desc", // Urutkan berdasarkan createdAt dari yang terbaru ke yang terlama
       },
     });
 
