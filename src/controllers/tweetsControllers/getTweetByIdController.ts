@@ -7,9 +7,9 @@ export const getTweetByIdController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = parseInt(req.params.id);
+  const userId = parseInt(req.params.id);
   try {
-    const result = await getTweetByIdAction(id);
+    const result = await getTweetByIdAction(userId);
     res.status(result.status).send(result);
   } catch (error) {
     next(error);
