@@ -1,23 +1,8 @@
-import express, { NextFunction, Request, Response } from "express";
-import registerRano from "./routers/ranoRouter";
-import tweetUser from "./routers/tweetRouter";
-import cors from "cors";
+import App from "./app";
 
-const PORT = process.env.PORT || 3000;
+const main = () => {
+  const app = new App();
+  app.start();
+};
 
-const app = express();
-app.use(express.json());
-// Middleware Error handler
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  res.status(400).send(err.message);
-});
-app.use(cors());
-app.use("/users", registerRano);
-app.use("/tweet", tweetUser);
-app.post("/", (req, res) => {
-  res.send("Api");
-});
-
-app.listen(PORT, () => {
-  console.log("App run on port 3000");
-});
+main();
