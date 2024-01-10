@@ -1,15 +1,27 @@
-import express from "express";
-import { addTweetController } from "../controllers/tweetsControllers/addTweetController";
-import { getTweetController } from "../controllers/tweetsControllers/getTweetControllers";
-import { deleteTweetController } from "../controllers/tweetsControllers/deleteTweetController";
-import { updateTweetController } from "../controllers/tweetsControllers/updateTweetController";
-import { getTweetByIdController } from "../controllers/tweetsControllers/getTweetByIdController";
+import { Router } from "express";
+import { TweetController } from "../controllers/tweetsControllers/tweetControllers";
 
-const router = express.Router();
+export class TweetRouter {
+  private router: Router;
+  private tweetController: TweetController;
 
-router.post("/add-tweet", addTweetController);
-router.get("/", getTweetController);
-router.delete("/:id", deleteTweetController);
-router.patch("/:id", updateTweetController);
-router.get("/profile/:id", getTweetByIdController);
-export default router;
+  constructor() {
+    this.tweetController = new TweetController();
+    this.router = Router();
+    this.initilizeRoutes();
+  }
+  private initilizeRoutes(): void {
+    this.router.get("/", this.tweetController.getTweetController);
+    this.router.post("/add-tweet", this.tweetController.addTweetController);
+    this.router.delete("/:id", this.tweetController.deleteTweetController);
+    this.router.get(
+      "/profile/:id",
+      this.tweetController.getTweetByIdController
+    );
+    this.router.patch("/:id", this.tweetController.updateTweetController);
+  }
+
+  getRouter(): Router {
+    return this.router;
+  }
+}
